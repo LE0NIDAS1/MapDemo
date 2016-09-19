@@ -108,7 +108,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     edMail.setError(null);
                 }
-
+                //algo
                 if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
                     edPass.setError("between 4 and 10 alphanumeric characters");
                     valid = false;
