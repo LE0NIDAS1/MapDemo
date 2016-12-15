@@ -1,10 +1,18 @@
 <resources>
-    <string name="app_name">Proyecto</string>
+    <string name="app_name">Rent-UY</string>
     <string name="title_activity_maps">Map</string>
     <string name="title_activity_busqueda">Busqueda</string>
-    <string name="pick_date">Pick Date</string>
-    <string name="init_text">Begin Date</string>
+    <string name="pick_date">Fecha de Recogida</string>
+    <string name="init_text">Fecha Inicio</string>
     <string name="Url1">https://192.168.1.121:8443/SpringMVC</string>
+    <string name="server_client_id">AIzaSyDdxEmB6o7iABuz55Si9RfSdyMXvPB7Al4</string>
+    <string name="app_id">AIzaSyDdxEmB6o7iABuz55Si9RfSdyMXvPB7Al4</string>
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="signed_out">Signed out</string>
+    <string name="id_token_fmt">ID Token: %s</string>
+    <string name="signed_in">Signed in</string>
+
+
 
     <string name="large_text">
 
@@ -101,4 +109,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_search">SearchActivity</string>
     <string name="action_search">Search</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="iniciar_sesion">Iniciar sesión</string>
+    <string name="registrar">¿No tienes una cuenta? Registrate aquí</string>
 </resources>

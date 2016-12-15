@@ -5,19 +5,12 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.root.mapdemo.utils.HttpsTrustManager;
-import com.example.root.mapdemo.utils.Model;
-import com.example.root.mapdemo.utils.Office;
-import com.example.root.mapdemo.utils.RVAdapter;
+import com.example.root.mapdemo.entity.Office;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -35,8 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.example.root.mapdemo.R.id.map;
-import static com.example.root.mapdemo.R.id.textSucursal;
-import static com.example.root.mapdemo.SearchActivity.getAppContext;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -44,6 +35,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private List<Office> lista;
 
     private static final int OK_RESULT_CODE = 1;
+    private static final int OK_RESULT_CODE2 = 2;
+
 
 
     @Override
@@ -75,7 +68,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                     jsonResoponse = new JSONArray(response);
                     int count = 0;
-                    //lista = new ArrayList<>();
+                    lista = new ArrayList<>();
                     while(count < jsonResoponse.length()) {
                         JSONObject childJSONObject = jsonResoponse.getJSONObject(count);
 
@@ -91,7 +84,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         office.setApertureHour(childJSONObject.getString("apertureHour"));
                         office.setClosingHour(childJSONObject.getString("closingHour"));
 
-//                        lista.add(office);
+                        lista.add(office);
 
                         LatLng mont = new LatLng(Float.parseFloat(office.getLatitude()),Float.parseFloat(office.getLogitude()));
 
@@ -106,6 +99,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             };
         };
+
+        HttpsTrustManager.allowAllSSL();
 
         SucursalRequest sucursalRequest = new SucursalRequest(responseListener);
         RequestQueue queue = Volley.newRequestQueue(MapsActivity.this);
@@ -129,12 +124,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         // Add a marker in Sydney and move the camera
-        LatLng mont = new LatLng(-34.8938383,-56.1655067);
-        //mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+       LatLng mont = new LatLng(-32.4787952,-55.8862467);
+//        mMap.addMarker(new MarkerOptions().position(mont).title("Marker in Sydney"));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(mont));
-
+//
         mMap.addMarker(new MarkerOptions().position(mont).title("Montevideo").icon(BitmapDescriptorFactory.fromResource(R.drawable.pushpin)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mont, 13));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mont, (float)6.55));
         if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -149,15 +144,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
-
             @Override
             public void onInfoWindowClick(Marker arg0) {
-               //Toast.makeText(getApplicationContext(), arg0.getTitle(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(getApplicationContext(), arg0.getTitle(), Toast.LENGTH_SHORT).show();
                 try {
+                    String s = getIntent().getStringExtra("sucursal");
+
                     Intent intent = new Intent();
 
                     intent.putExtra("officeName", arg0.getTitle());
                     intent.putExtra("officeId", arg0.getSnippet());
+                    if(s.equals("1")) {
+                        intent.putExtra("suc", "1");
+                    }
+                    else if(s.equals("2")){
+                        intent.putExtra("suc", "2");
+                    }
+
                     setResult(OK_RESULT_CODE, intent);
                     finish();
                 } catch (Throwable throwable) {

@@ -1,5 +1,4 @@
-package com.example.root.mapdemo.utils;
-
+package com.example.root.mapdemo.entity;
 
 public class Office {
 
