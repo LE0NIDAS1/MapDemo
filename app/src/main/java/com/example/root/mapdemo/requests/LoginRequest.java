@@ -1,4 +1,4 @@
-package com.example.root.mapdemo;
+package com.example.root.mapdemo.requests;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
