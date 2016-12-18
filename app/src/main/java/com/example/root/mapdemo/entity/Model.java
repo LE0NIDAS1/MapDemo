@@ -1,5 +1,6 @@
 package com.example.root.mapdemo.entity;
 
+import android.content.Context;
 import android.widget.ImageView;
 
 public class Model {
@@ -39,6 +40,10 @@ public class Model {
 
     public void setImages(String images) {
         this.images = images;
+    }
+
+    public int getImageResourceId(Context context) {
+        return context.getResources().getIdentifier(this.modelName, "drawable", context.getPackageName());
     }
 
 //    public Model(String name, int age, int photoId) {

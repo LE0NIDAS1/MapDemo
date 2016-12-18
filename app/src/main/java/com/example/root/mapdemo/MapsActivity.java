@@ -5,6 +5,8 @@ import android.content.pm.PackageManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,10 +29,11 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static com.example.root.mapdemo.R.id.map;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, GoogleMap.InfoWindowAdapter {
 
     private GoogleMap mMap;
     private List<Office> lista;
@@ -123,27 +126,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-
-        // Add a marker in Sydney and move the camera
-       LatLng mont = new LatLng(-32.4787952,-55.8862467);
-//        mMap.addMarker(new MarkerOptions().position(mont).title("Marker in Sydney"));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(mont));
-//
-        mMap.addMarker(new MarkerOptions().position(mont).title("Montevideo").icon(BitmapDescriptorFactory.fromResource(R.drawable.pushpin)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mont, (float)6.55));
-        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        mMap.setMyLocationEnabled(true);
-
-
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker arg0) {
@@ -169,6 +151,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        // Add a marker in Sydney and move the camera
+       LatLng mont = new LatLng(-32.4787952,-55.8862467);
+//        mMap.addMarker(new MarkerOptions().position(mont).title("Marker in Sydney"));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(mont));
+//
+//        mMap.addMarker(new MarkerOptions().position(mont).title("Montevideo").icon(BitmapDescriptorFactory.fromResource(R.drawable.pushpin)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mont, (float)6.55));
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        mMap.setMyLocationEnabled(true);
+
+
+
+
+
 //        mMap.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
 //            @Override
 //            public boolean onMarkerClick(Marker marker) {
@@ -193,4 +199,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 //        });
     }
 
+
+    @Override
+    public View getInfoWindow(Marker marker) {
+        Toast.makeText(MapsActivity.this,"You click @" ,Toast.LENGTH_SHORT).show();
+
+        return null;
+    }
+
+    @Override
+    public View getInfoContents(Marker marker) {
+        Toast.makeText(MapsActivity.this,"You click @",Toast.LENGTH_SHORT).show();
+
+        return null;
+    }
 }

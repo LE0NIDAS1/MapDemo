@@ -16,7 +16,7 @@ import static com.example.root.mapdemo.utils.Constant.URL;
 
 public class PayPalRequest extends StringRequest {
 
-    private static final String SEARCH_REQUEST_URL = URL + "/api/search";;
+    private static final String SEARCH_REQUEST_URL = URL + "/api/book";;
     private Map<String, String> params;
 
     public PayPalRequest(SearchFilter search, Response.Listener<String> listener){
@@ -42,9 +42,9 @@ public class PayPalRequest extends StringRequest {
         String str = "{\"airConditioner\":\"true\",\"beginDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"luggage\":\"0\",\"officeEndId\":\""+officeEndId+"\",\"officeOriginId\":\""+officeOriginId+"\",\"passangers\":\"0\"}";
         return str.getBytes();
     };
+
     @Override
-    public String getBodyContentType()
-    {
+    public String getBodyContentType() {
         return "Content-Type, application/json; charset=utf-8";
     }
 

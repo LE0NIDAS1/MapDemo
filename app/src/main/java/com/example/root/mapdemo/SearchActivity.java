@@ -77,38 +77,38 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
         return mContext;
     }
 
-    RVAdapter.OnItemClickListener onItemClickListener = new RVAdapter.OnItemClickListener() {
-        @Override
-        public void onItemClick(View v, int position) {
-            Intent transitionIntent = new Intent(SearchActivity.getAppContext(), DetailActivity.class);
-            transitionIntent.putExtra(DetailActivity.EXTRA_PARAM_ID, position);
-            ImageView placeImage = (ImageView) v.findViewById(R.id.car_photo);
-            TextView placeNameHolder = (TextView) v.findViewById(R.id.model_name);
-            TextView priceModel = (TextView) v.findViewById(R.id.car_base_price);
-
-            View navigationBar = findViewById(android.R.id.navigationBarBackground);
-            View statusBar = findViewById(android.R.id.statusBarBackground);
-
-            Pair<View, String> imagePair = Pair.create((View) placeImage, "tImage");
-            Pair<View, String> holderPair = Pair.create((View) placeNameHolder, "tNameHolder");
-
-//            Pair<View, String> navPair = Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
-//            Pair<View, String> statusPair = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
-            //Pair<View, String> toolbarPair = Pair.create((View)toolbar, "tActionBar");
-
-            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchActivity.this, imagePair, holderPair/*, navPair, statusPair*/);
-            transitionIntent.putExtra("Name", placeNameHolder.getText());
-            transitionIntent.putExtra("Price", priceModel.getText());
-
-            BitmapDrawable drawable = (BitmapDrawable) placeImage.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
-
-            transitionIntent.putExtra("bitmap", bitmap);
-            transitionIntent.putExtra("Image", ((BitmapDrawable)placeImage.getDrawable()).getBitmap());
-
-            ActivityCompat.startActivity(SearchActivity.this, transitionIntent, options.toBundle());
-        }
-    };
+//    RVAdapter.OnItemClickListener onItemClickListener = new RVAdapter.OnItemClickListener() {
+//        @Override
+//        public void onItemClick(View v, int position) {
+//            Intent transitionIntent = new Intent(SearchActivity.getAppContext(), DetailActivity.class);
+//            transitionIntent.putExtra(DetailActivity.EXTRA_PARAM_ID, position);
+//            ImageView placeImage = (ImageView) v.findViewById(R.id.car_photo);
+//            TextView placeNameHolder = (TextView) v.findViewById(R.id.model_name);
+//            TextView priceModel = (TextView) v.findViewById(R.id.car_base_price);
+//
+//            View navigationBar = findViewById(android.R.id.navigationBarBackground);
+//            View statusBar = findViewById(android.R.id.statusBarBackground);
+//
+//            Pair<View, String> imagePair = Pair.create((View) placeImage, "tImage");
+//            Pair<View, String> holderPair = Pair.create((View) placeNameHolder, "tNameHolder");
+//
+////            Pair<View, String> navPair = Pair.create(navigationBar, Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME);
+////            Pair<View, String> statusPair = Pair.create(statusBar, Window.STATUS_BAR_BACKGROUND_TRANSITION_NAME);
+//            //Pair<View, String> toolbarPair = Pair.create((View)toolbar, "tActionBar");
+//
+//            ActivityOptionsCompat options = ActivityOptionsCompat.makeSceneTransitionAnimation(SearchActivity.this, imagePair, holderPair/*, navPair, statusPair*/);
+//            transitionIntent.putExtra("Name", placeNameHolder.getText());
+//            transitionIntent.putExtra("Price", priceModel.getText());
+//
+//            BitmapDrawable drawable = (BitmapDrawable) placeImage.getDrawable();
+//            Bitmap bitmap = drawable.getBitmap();
+//
+//            transitionIntent.putExtra("bitmap", bitmap);
+//            transitionIntent.putExtra("Image", ((BitmapDrawable)placeImage.getDrawable()).getBitmap());
+//
+//            ActivityCompat.startActivity(SearchActivity.this, transitionIntent, options.toBundle());
+//        }
+//    };
 
 
     private void setToolbar() {
@@ -282,7 +282,6 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
         super.onCreate(savedInstanceState);
         setContentView(activity_search);
 
-        mContext = getApplicationContext();
 
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.compatSwitch);
         switchCompat.setOnCheckedChangeListener(this);
@@ -326,20 +325,20 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
             selectItem(drawerTitle);
         };
 
-        Model m = new Model();
-        m.setModelName("Camaro");
-        m.setImages("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg");
-        m.setBassPrice(1);
-        lista = new ArrayList<>();
-
-        lista.add(m);
-        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-        rv.setLayoutManager(llm);
-        rv.setHasFixedSize(true);
-        adapter = new RVAdapter(SearchActivity.mContext);
-        adapter = new RVAdapter(lista);
-        rv.setAdapter(adapter);
-        adapter.setOnItemClickListener(onItemClickListener);
+//        Model m = new Model();
+//        m.setModelName("Camaro");
+//        m.setImages("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg");
+//        m.setBassPrice(1);
+//        lista = new ArrayList<>();
+//
+//        lista.add(m);
+//        LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+//        rv.setLayoutManager(llm);
+//        rv.setHasFixedSize(true);
+//        adapter = new RVAdapter(SearchActivity.mContext);
+//        adapter = new RVAdapter(lista);
+//        rv.setAdapter(adapter);
+//        adapter.setOnItemClickListener(onItemClickListener);
 
 
 
@@ -351,121 +350,129 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
                 final String officeId = hiddenIdTV.getText().toString();
                 final String officeId2 = hiddenIdTV2.getText().toString();
 
+                Intent intent = new Intent(SearchActivity.this, ListActivity.class);
+                intent.putExtra("BeginDate", beginDate);
+                intent.putExtra("EndDate", endDate);
+                intent.putExtra("OfficeId1", officeId);
+                intent.putExtra("OfficeId2", officeId2);
+
+                SearchActivity.this.startActivity(intent);
+
 
                 HttpsTrustManager.allowAllSSL();
 
-                Response.Listener<String> responseListener = new Response.Listener<String>(){
-                    @Override
-                    public  void onResponse(String response){
-                        JSONArray jsonResoponse = null;
-                        try {
-
-                            jsonResoponse = new JSONArray(response);
-                            int count = 0;
-                            lista = new ArrayList<>();
-                            while(count < jsonResoponse.length()) {
-                                JSONObject childJSONObject = jsonResoponse.getJSONObject(count);
-
-                                Model m = new Model();
-                                m.setId(childJSONObject.getInt("id"));
-                                m.setModelName(childJSONObject.getString("name"));
-                                JSONObject fuelJson = childJSONObject.getJSONObject("fuel");
-                                m.setFuelType(fuelJson.getString("fuelType"));
-                                m.setFuelPrice((float) fuelJson.getDouble("fuelPrice"));
-                                JSONObject categoryJson = childJSONObject.getJSONObject("category");
-                                m.setCategoria(categoryJson.getString("name"));
-                                m.setBassPrice((float) categoryJson.getDouble("basePrice"));
-                                m.setYear(childJSONObject.getInt("year"));
-                                m.setPassangers(childJSONObject.getInt("passangers"));
-                                m.setLuggage(childJSONObject.getInt("luggage"));
-                                m.setCylinders(childJSONObject.getInt("cylinders"));
-                                m.setAirConditioner(childJSONObject.getBoolean("airConditioner"));
-                                m.setTransmission(childJSONObject.getString("transmission"));
-                                m.setInsurance((float) childJSONObject.getDouble("insurance"));
-                                m.setFullTank(childJSONObject.getInt("fullTank"));
-                                JSONArray imageJson = childJSONObject.getJSONArray("images");
-                                if (! imageJson.isNull(0)) {
-                                    JSONObject imageSONObject = imageJson.getJSONObject(0);
-                                    m.setImages(imageSONObject.getString("fileLocation").replace(" ", "%20"));
-                                }
-                                lista.add(m);
-
-                                count++;
-                            }
-
-
-                            LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
-                            rv.setLayoutManager(llm);
-                            rv.setHasFixedSize(true);
-                            adapter = new RVAdapter(SearchActivity.mContext);
-                            adapter = new RVAdapter(lista);
-                            rv.setAdapter(adapter);
-                            adapter.setOnItemClickListener(onItemClickListener);
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    };
-                };
-                JSONArray model = new JSONArray();
-
-                JSONObject car = new JSONObject();
-
-//                try {
-//                    car.put("Model", search);
-//                    car.put("GPS", true);
-//                } catch (JSONException e) {
-//                    e.printStackTrace();
+//                Response.Listener<String> responseListener = new Response.Listener<String>(){
+//                    @Override
+//                    public  void onResponse(String response){
+//                        JSONArray jsonResoponse = null;
+//                        try {
+//
+//                            jsonResoponse = new JSONArray(response);
+//                            int count = 0;
+//                            lista = new ArrayList<>();
+//                            while(count < jsonResoponse.length()) {
+//                                JSONObject childJSONObject = jsonResoponse.getJSONObject(count);
+//
+//                                Model m = new Model();
+//                                m.setId(childJSONObject.getInt("id"));
+//                                m.setModelName(childJSONObject.getString("name"));
+//                                JSONObject fuelJson = childJSONObject.getJSONObject("fuel");
+//                                m.setFuelType(fuelJson.getString("fuelType"));
+//                                m.setFuelPrice((float) fuelJson.getDouble("fuelPrice"));
+//                                JSONObject categoryJson = childJSONObject.getJSONObject("category");
+//                                m.setCategoria(categoryJson.getString("name"));
+//                                m.setBassPrice((float) categoryJson.getDouble("basePrice"));
+//                                m.setYear(childJSONObject.getInt("year"));
+//                                m.setPassangers(childJSONObject.getInt("passangers"));
+//                                m.setLuggage(childJSONObject.getInt("luggage"));
+//                                m.setCylinders(childJSONObject.getInt("cylinders"));
+//                                m.setAirConditioner(childJSONObject.getBoolean("airConditioner"));
+//                                m.setTransmission(childJSONObject.getString("transmission"));
+//                                m.setInsurance((float) childJSONObject.getDouble("insurance"));
+//                                m.setFullTank(childJSONObject.getInt("fullTank"));
+//                                JSONArray imageJson = childJSONObject.getJSONArray("images");
+//                                if (! imageJson.isNull(0)) {
+//                                    JSONObject imageSONObject = imageJson.getJSONObject(0);
+//                                    m.setImages(imageSONObject.getString("fileLocation").replace(" ", "%20"));
+//                                }
+//                                lista.add(m);
+//
+//                                count++;
+//                            }
+//
+//
+//                            LinearLayoutManager llm = new LinearLayoutManager(getApplicationContext());
+//                            rv.setLayoutManager(llm);
+//                            rv.setHasFixedSize(true);
+//                            adapter = new RVAdapter(SearchActivity.mContext);
+//                            adapter = new RVAdapter(lista);
+//                            rv.setAdapter(adapter);
+//                            adapter.setOnItemClickListener(onItemClickListener);
+//
+//                        } catch (JSONException e) {
+//                            e.printStackTrace();
+//                        }
+//                    };
+//                };
+//                JSONArray model = new JSONArray();
+//
+//                JSONObject car = new JSONObject();
+//
+////                try {
+////                    car.put("Model", search);
+////                    car.put("GPS", true);
+////                } catch (JSONException e) {
+////                    e.printStackTrace();
+////                }
+//
+//                SearchFilter searchf = new SearchFilter();
+//                searchf.setPassangers(0);
+//                searchf.setAirConditioner(true);
+//                searchf.setBeginDate(beginDate);
+//                searchf.setEndDate(endDate);
+//                searchf.setLuggage(0);
+//                searchf.setOfficeOriginId(Integer.parseInt(officeId));
+//                if(officeId2 != null && officeId2 != "") {
+//                    searchf.setOfficeEndId(Integer.parseInt(officeId2));
+//                }else{
+//                    searchf.setOfficeEndId(Integer.parseInt(officeId));
 //                }
-
-                SearchFilter searchf = new SearchFilter();
-                searchf.setPassangers(0);
-                searchf.setAirConditioner(true);
-                searchf.setBeginDate(beginDate);
-                searchf.setEndDate(endDate);
-                searchf.setLuggage(0);
-                searchf.setOfficeOriginId(Integer.parseInt(officeId));
-                if(officeId2 != null && officeId2 != "") {
-                    searchf.setOfficeEndId(Integer.parseInt(officeId2));
-                }else{
-                    searchf.setOfficeEndId(Integer.parseInt(officeId));
-                }
-                //gson.toJson(searchf);
-
-                SearchRequest searchRequest = new SearchRequest(searchf, responseListener);
-                RequestQueue queue = Volley.newRequestQueue(SearchActivity.getAppContext());
-                queue.add(searchRequest);
+//                //gson.toJson(searchf);
+//
+//                SearchRequest searchRequest = new SearchRequest(searchf, responseListener);
+//                RequestQueue queue = Volley.newRequestQueue(SearchActivity.getAppContext());
+//                queue.add(searchRequest);
             }
         });
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.main, menu);
-
-        final MenuItem searchItem = menu.findItem(R.id.action_search);
-        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        //permite modificar el hint que el EditText muestra por defecto
-        searchView.setQueryHint(getText(R.string.action_search));
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                Toast.makeText(SearchActivity.this, "enter", Toast.LENGTH_SHORT).show();
-                //se oculta el EditText
-                searchView.setQuery("", false);
-                searchView.setIconified(true);
-                return true;
-            }
-            @Override
-            public boolean onQueryTextChange(String newText) {
-
-                textView.setText(newText);
-                return true;
-            }
-        });
-
-
-        return super.onCreateOptionsMenu(menu);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater inflater = getMenuInflater();
+//        inflater.inflate(R.menu.main, menu);
+//
+//        final MenuItem searchItem = menu.findItem(R.id.action_search);
+//        final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+//        //permite modificar el hint que el EditText muestra por defecto
+//        searchView.setQueryHint(getText(R.string.action_search));
+//        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+//            @Override
+//            public boolean onQueryTextSubmit(String query) {
+//                Toast.makeText(SearchActivity.this, "enter", Toast.LENGTH_SHORT).show();
+//                //se oculta el EditText
+//                searchView.setQuery("", false);
+//                searchView.setIconified(true);
+//                return true;
+//            }
+//            @Override
+//            public boolean onQueryTextChange(String newText) {
+//
+//                textView.setText(newText);
+//                return true;
+//            }
+//        });
+//
+//
+//        return super.onCreateOptionsMenu(menu);
+//    }
 }

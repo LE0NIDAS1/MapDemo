@@ -8,12 +8,20 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageView
-      android:id="@+id/placeImage"
-      android:layout_width="match_parent"
-      android:layout_height="220dp"
-      android:scaleType="centerCrop"
-      android:transitionName="tImage" />
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:id="@+id/placeImage"
+        android:scaleType="centerCrop"
+        android:transitionName="tImage"
+        />
+    <!--<ImageView-->
+      <!--android:id="@+id/placeImage"-->
+      <!--android:layout_width="match_parent"-->
+      <!--android:layout_height="220dp"-->
+      <!--android:scaleType="centerCrop"-->
+      <!--android:transitionName="tImage" />-->
 
     <LinearLayout
       android:id="@+id/llEditTextHolder"

@@ -33,7 +33,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:24.2.1'
     compile 'com.android.support:recyclerview-v7:24.2.1'
     compile 'de.hdodenhof:circleimageview:1.3.0'
-    compile 'com.google.code.gson:gson:2.2.+'
     compile 'com.paypal.sdk:paypal-android-sdk:2.14.2'
+    compile 'com.squareup.picasso:picasso:2.5.0'
     //compile files ('PayPal_MPL.jar')
 }

@@ -9,6 +9,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.Animatable;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.RippleDrawable;
@@ -38,14 +39,17 @@ import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.root.mapdemo.R;
 import com.example.root.mapdemo.entity.Extra;
 import com.example.root.mapdemo.entity.Model;
 import com.example.root.mapdemo.entity.Office;
+import com.example.root.mapdemo.entity.Reservation;
 import com.example.root.mapdemo.requests.ExtraRequest;
 import com.example.root.mapdemo.utils.HttpsTrustManager;
 import com.example.root.mapdemo.utils.TransitionAdapter;
+import com.example.root.mapdemo.utils.VolleySingleton;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -74,7 +78,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
     public static final String EXTRA_PARAM_ID = "place_id";
     public static final String NAV_BAR_VIEW_NAME = Window.NAVIGATION_BAR_BACKGROUND_TRANSITION_NAME;
     private ListView mList;
-    private ImageView mImageView;
+    private NetworkImageView mImageView;
     private TextView mTitle;
     private LinearLayout mTitleHolder;
     private Palette mPalette;
@@ -84,7 +88,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
     private EditText mEditTextTodo;
     private boolean isEditTextVisible;
     private InputMethodManager mInputManager;
-    private Model mPlace;
+    private Model model;
     private TextView mPrice;
     private ArrayList<String> mTodoList;
     private ArrayAdapter mToDoAdapter;
@@ -114,13 +118,13 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         String name = getIntent().getStringExtra("Name");
         Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
         String price = getIntent().getStringExtra("Price");
+        String urlImage = getIntent().getStringExtra("urlImage");
 
 
-        mPlace = new Model();//PlaceData.placeList().get(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
-        mPlace.setModelName(name);
-        mPlace.setBassPrice(23);
+        model = new Model();//PlaceData.placeList().get(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
+        model.setModelName(name);
         mList = (ListView) findViewById(R.id.list);
-        mImageView = (ImageView) findViewById(R.id.placeImage);
+        mImageView = (NetworkImageView) findViewById(R.id.placeImage);
 
         mPrice = (TextView) findViewById(R.id.textPrice);
         mTitle = (TextView) findViewById(R.id.textView);
@@ -131,6 +135,13 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
         mAddButton.setImageResource(R.drawable.icn_morph_reverse);
         mAddButton.setOnClickListener(this);
+
+        mAddButton.setImageResource(R.drawable.icn_morp);
+        mAnimatable = (Animatable) (mAddButton).getDrawable();
+        mAnimatable.start();
+        applyRippleColor(getResources().getColor(R.color.light_green), getResources().getColor(R.color.dark_green));
+
+
         defaultColorForRipple = getResources().getColor(R.color.cardview_dark_background);
         mInputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         mRevealView.setVisibility(View.INVISIBLE);
@@ -141,15 +152,17 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         mList.setAdapter(mToDoAdapter);
 
         //loadPlace();
-        mTitle.setText(mPlace.getModelName());
+        mTitle.setText(model.getModelName());
         mPrice.setText(price);
-        mImageView.setImageBitmap(bitmap);
-
+//        mImageView.setImageBitmap(bitmap);
+        mImageView.setImageUrl(urlImage, VolleySingleton.getInstance().getImageLoader());
         windowTransition();
 
 
+//        BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
+//        Bitmap bitmap = drawable.getBitmap();
 //        getPhoto();
-        colorize(bitmap);
+//        colorize(bitmap);
 
 
 //        generateListContent();
@@ -189,10 +202,10 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             };
         };
             //ingresar datos precargado
-            data.add("GPS");
-            data.add("Air conditioner");
-            prices.add("$1");
-            prices.add("$2");
+//            data.add("GPS");
+//            data.add("Air conditioner");
+//            prices.add("$1");
+//            prices.add("$2");
             mList.setAdapter(new MyListAdaper(getApplicationContext(), R.layout.list_extra, data, prices));
             mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                              @Override
@@ -296,6 +309,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                         aux = prices.get(x).replace("$","");
                         monto_pago = monto_pago.add(new BigDecimal(aux));
                     }
+                    monto_pago = new BigDecimal(1);
 
 
                     PayPalPayment payment = new PayPalPayment(monto_pago,"USD","Test payment with paypal"
@@ -440,8 +454,21 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
                         try {
                             Log.i(TAG, confirm.toJSONObject().toString(4));
+                            Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
+                            Reservation reservation = new Reservation();
 
-                        Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
+                            JSONObject jsonResoponse = confirm.toJSONObject();
+                            JSONObject childJSONObject = jsonResoponse.getJSONObject("response");
+                            reservation.setToken(childJSONObject.getString("id"));
+                            childJSONObject = confirm.getPayment().toJSONObject();
+                            reservation.setOrderTotal(childJSONObject.getString("amount"));
+                            reservation.setPayerId("info.rentuy-buyer@gmail.com");
+                            reservation.setPromotionCode("");
+                            reservation.setItemTotal(String.valueOf(prices.size()));
+
+                            List<Extra> lista = new ArrayList<>();
+
+                            String a = "asd";
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }

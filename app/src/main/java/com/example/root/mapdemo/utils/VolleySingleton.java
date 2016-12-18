@@ -13,6 +13,7 @@ import com.android.volley.toolbox.DiskBasedCache;
 import com.android.volley.toolbox.HurlStack;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.Volley;
+import com.example.root.mapdemo.ListActivity;
 import com.example.root.mapdemo.SearchActivity;
 
 
@@ -26,7 +27,7 @@ public class VolleySingleton {
     private ImageLoader mImageLoader;
 
     private VolleySingleton(){
-        mRequestQueue = Volley.newRequestQueue(SearchActivity.getAppContext());
+        mRequestQueue = Volley.newRequestQueue(ListActivity.getAppContext());
         mImageLoader = new ImageLoader(this.mRequestQueue, new ImageLoader.ImageCache() {
             private final LruCache<String, Bitmap> mCache = new LruCache<String, Bitmap>(10);
             public void putBitmap(String url, Bitmap bitmap) {
