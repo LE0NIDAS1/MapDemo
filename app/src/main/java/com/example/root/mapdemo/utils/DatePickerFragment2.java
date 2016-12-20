@@ -9,7 +9,9 @@ import android.widget.TextView;
 
 import com.example.root.mapdemo.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * Created by leoeg on 17/11/2016.
@@ -33,6 +35,23 @@ public class DatePickerFragment2 extends DialogFragment
     public void onDateSet(DatePicker view, int year, int month, int day) {
         // Do something with the date chosen by the user
         TextView tv1= (TextView) getActivity().findViewById(R.id.textview2);
+        String[] days = new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+                "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+        TextView tv2= (TextView) getActivity().findViewById(R.id.year2);
+        TextView tv3= (TextView) getActivity().findViewById(R.id.day2);
+        TextView tv4= (TextView) getActivity().findViewById(R.id.dayOfWeek2);
+        TextView tv5= (TextView) getActivity().findViewById(R.id.month2);
+
+        tv2.setText(String.valueOf(view.getYear()));
+        tv3.setText(String.valueOf(view.getDayOfMonth()));
+        tv5.setText(days[view.getMonth()]);
+
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+        Date date = new Date(view.getYear(), view.getMonth(), view.getDayOfMonth()-1);
+        String dayOfWeek = simpledateformat.format(date);
+        tv4.setText(String.valueOf(dayOfWeek));
+
         tv1.setText(view.getDayOfMonth()+"/"+(view.getMonth()+1)+"/"+view.getYear());
 
     }

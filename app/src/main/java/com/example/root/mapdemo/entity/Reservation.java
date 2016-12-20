@@ -8,15 +8,10 @@ import java.util.List;
 public class Reservation {
 
     private String token;
-
     private String payerId;
-
     private String itemTotal;
-
     private String orderTotal;
-
     private String promotionCode;
-
     private int clientId;
 
     private List<AddressConstants.Extras> extras;

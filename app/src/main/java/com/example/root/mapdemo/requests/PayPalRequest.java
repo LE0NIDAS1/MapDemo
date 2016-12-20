@@ -3,6 +3,8 @@ package com.example.root.mapdemo.requests;
 import com.android.volley.AuthFailureError;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
+import com.example.root.mapdemo.entity.BookingModel;
+import com.example.root.mapdemo.entity.Reservation;
 import com.example.root.mapdemo.entity.SearchFilter;
 
 import java.util.HashMap;
@@ -19,27 +21,44 @@ public class PayPalRequest extends StringRequest {
     private static final String SEARCH_REQUEST_URL = URL + "/api/book";;
     private Map<String, String> params;
 
-    public PayPalRequest(SearchFilter search, Response.Listener<String> listener){
+    public PayPalRequest(Reservation reservation, BookingModel bookingModel, Response.Listener<String> listener){
         super(Method.POST, SEARCH_REQUEST_URL,listener, null);
         params = new HashMap<>();
-        params.put("beginDate",search.getBeginDate());
-        params.put("airConditioner", "true");
-        params.put("endDate", search.getEndDate());
-        params.put("passangers","1");
-        params.put("luggage",  "0");
-        params.put("officeOriginId", String.valueOf(search.getOfficeOriginId()));
-        params.put("officeEndId", String.valueOf(search.getOfficeEndId()));
+        params.put("idModel", String.valueOf(bookingModel.getIdModel()));
+        params.put("beginDate", bookingModel.getStartDate());
+        params.put("endDate", bookingModel.getEndDate());
+        params.put("originBranchOfficeId", String.valueOf(bookingModel.getOriginBranchOfficeId()));
+        params.put("endBranchOfficeId", String.valueOf(bookingModel.getEndBranchOfficeId()));
+        params.put("withInsurance", String.valueOf(bookingModel.isWithInsurance()));
+        params.put("withFullTank", String.valueOf(bookingModel.isWithFullTank()));
+
+        params.put("token", reservation.getToken());
+        params.put("payerId", reservation.getPayerId());
+        params.put("itemTotal", reservation.getItemTotal());
+        params.put("orderTotal", reservation.getOrderTotal());
+        params.put("promotionCode", reservation.getPromotionCode());
+
+        params.put("clientId", String.valueOf(reservation.getClientId()));
 
     }
 
     @Override
     public byte[] getBody() throws com.android.volley.AuthFailureError {
+
+        String idModel = params.get("idModel");
         String beginDate = params.get("beginDate");
         String endDate = params.get("endDate");
-        String officeOriginId = params.get("officeOriginId");
-        String officeEndId = params.get("officeEndId");
+        String officeOriginId = params.get("originBranchOfficeId");
+        String officeEndId = params.get("endBranchOfficeId");
 
-        String str = "{\"airConditioner\":\"true\",\"beginDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"luggage\":\"0\",\"officeEndId\":\""+officeEndId+"\",\"officeOriginId\":\""+officeOriginId+"\",\"passangers\":\"0\"}";
+        String token = params.get("token");
+        String payerId = params.get("payerId");
+        String itemTotal = params.get("itemTotal");
+        String orderTotal = params.get("orderTotal");
+        String promotionCode = params.get("promotionCode");
+
+
+        String str = "{\"bookingModel\":{\"idModel\":"+idModel+",\"startDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"originBranchOfficeId\":"+officeOriginId+",\"endBranchOfficeId\":"+officeEndId+",\"withInsurance\":true,\"withFullTank\":50},\"token\":\""+token+"\",\"payerId\":\"TG7J6WTAZWD2L\",\"itemTotal\":\""+itemTotal+"\",\"orderTotal\":\""+orderTotal+"\",\"extras\":[],\"promotionCode\":\"\",\"clientId\":73}";
         return str.getBytes();
     };
 

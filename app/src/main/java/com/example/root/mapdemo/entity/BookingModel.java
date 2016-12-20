@@ -4,7 +4,7 @@ package com.example.root.mapdemo.entity;
  * Created by leoeg on 18/12/2016.
  */
 
-public class BookingModel {
+    public class BookingModel {
     private Integer idModel;
     private String startDate;
     private String endDate;

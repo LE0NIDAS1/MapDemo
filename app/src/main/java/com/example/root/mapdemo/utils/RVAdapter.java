@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
+import android.support.annotation.StringRes;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +48,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
         TextView carBasePrice;
         NetworkImageView carPhoto;
         TextView urlImage;
+        TextView idModel;
 
         public ModelViewHolder(View itemView){
             super(itemView);
@@ -55,8 +57,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
             modelName = (TextView)itemView.findViewById(R.id.model_name);
             carBasePrice = (TextView)itemView.findViewById(R.id.car_base_price);
             carPhoto = (NetworkImageView)itemView.findViewById(R.id.car_photo);
-            urlImage = (TextView)itemView.findViewById(R.id.urlImage);
-
+            urlImage = (TextView) itemView.findViewById(R.id.urlImage);
+            idModel = (TextView) itemView.findViewById(R.id.model_id);
         }
 
         @Override
@@ -100,6 +102,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
         final Model model = new Model();
 
         ModelViewHolder.modelName.setText(lista.get(i).getModelName());
+        ModelViewHolder.idModel.setText(String.valueOf(lista.get(i).getId()));
         ModelViewHolder.carBasePrice.setText("$" + String.valueOf(lista.get(i).getBassPrice()));
         ModelViewHolder.urlImage.setText(URL + "/images/" +lista.get(i).getImages());
         ModelViewHolder.carPhoto.setImageUrl(URL + "/images/" +lista.get(i).getImages(), VolleySingleton.getInstance().getImageLoader());
@@ -108,7 +111,7 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
         ImageView ima = new ImageView(ListActivity.getAppContext());
         ima.setImageDrawable(ModelViewHolder.carPhoto.getDrawable());
 
-        Bitmap bitmap = BitmapFactory.decodeResource(ListActivity.getAppContext().getResources(), R.drawable.material_background3);
+        Bitmap bitmap = BitmapFactory.decodeResource(ListActivity.getAppContext().getResources(), R.drawable.switzerland);
 
 
         Palette.generateAsync(bitmap, new Palette.PaletteAsyncListener() {

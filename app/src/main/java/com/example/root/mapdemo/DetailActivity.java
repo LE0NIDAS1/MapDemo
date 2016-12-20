@@ -42,11 +42,14 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.NetworkImageView;
 import com.android.volley.toolbox.Volley;
 import com.example.root.mapdemo.R;
+import com.example.root.mapdemo.entity.BookingModel;
 import com.example.root.mapdemo.entity.Extra;
 import com.example.root.mapdemo.entity.Model;
 import com.example.root.mapdemo.entity.Office;
 import com.example.root.mapdemo.entity.Reservation;
 import com.example.root.mapdemo.requests.ExtraRequest;
+import com.example.root.mapdemo.requests.PayPalRequest;
+import com.example.root.mapdemo.requests.SearchRequest;
 import com.example.root.mapdemo.utils.HttpsTrustManager;
 import com.example.root.mapdemo.utils.TransitionAdapter;
 import com.example.root.mapdemo.utils.VolleySingleton;
@@ -97,10 +100,9 @@ public class DetailActivity extends Activity implements View.OnClickListener {
     private ArrayList<String> prices = new ArrayList<String>();
 
     private static final String TAG = "paymentExample";
-
-
     BigDecimal monto_pago=new BigDecimal(1);
 
+    List<Extra> lista;
 
 
     PayPalConfiguration m_configuration;
@@ -116,9 +118,16 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
 //        Bitmap mBitmapFile = (File) getIntent().getSerializableExtra("Image");
         String name = getIntent().getStringExtra("Name");
-        Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
+//        Bitmap bitmap = getIntent().getParcelableExtra("bitmap");
         String price = getIntent().getStringExtra("Price");
         String urlImage = getIntent().getStringExtra("urlImage");
+
+        String beginDate = getIntent().getStringExtra("BeginDate");
+        String endDate = getIntent().getStringExtra("EndDate");
+        String officeId = getIntent().getStringExtra("OfficeId1");
+        String officeId2 = getIntent().getStringExtra("OfficeId2");
+        String idModel = getIntent().getStringExtra("idModel");
+
 
 
         model = new Model();//PlaceData.placeList().get(getIntent().getIntExtra(EXTRA_PARAM_ID, 0));
@@ -159,10 +168,10 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         windowTransition();
 
 
-//        BitmapDrawable drawable = (BitmapDrawable) mImageView.getDrawable();
-//        Bitmap bitmap = drawable.getBitmap();
+        Bitmap bitmap = BitmapFactory.decodeResource(ListActivity.getAppContext().getResources(), R.drawable.switzerland);
+
 //        getPhoto();
-//        colorize(bitmap);
+       colorize(bitmap);
 
 
 //        generateListContent();
@@ -172,8 +181,9 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             @Override
             public  void onResponse(String response){
                 JSONObject jsonResoponse = null;
-                try {
+                lista = new ArrayList<>();
 
+                try {
                     jsonResoponse = new JSONObject(response);
                     JSONArray jsonArray = jsonResoponse.getJSONArray("extras");
                     int count = 0;
@@ -185,6 +195,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                         extra.setPrice(childJSONObject.getLong("price"));
                         data.add(extra.getName());
                         prices.add("$"+extra.getPrice());
+                        lista.add(extra);
                         count++;
                     }
 
@@ -309,7 +320,6 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                         aux = prices.get(x).replace("$","");
                         monto_pago = monto_pago.add(new BigDecimal(aux));
                     }
-                    monto_pago = new BigDecimal(1);
 
 
                     PayPalPayment payment = new PayPalPayment(monto_pago,"USD","Test payment with paypal"
@@ -455,7 +465,21 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                         try {
                             Log.i(TAG, confirm.toJSONObject().toString(4));
                             Log.i(TAG, confirm.getPayment().toJSONObject().toString(4));
+
+                            String beginDate = getIntent().getStringExtra("BeginDate");
+                            String endDate = getIntent().getStringExtra("EndDate");
+                            String officeId = getIntent().getStringExtra("OfficeId1");
+                            String officeId2 = getIntent().getStringExtra("OfficeId2");
+                            String idModel = getIntent().getStringExtra("idModel");
+
                             Reservation reservation = new Reservation();
+                            BookingModel bookingModel = new BookingModel();
+                            bookingModel.setIdModel(Integer.parseInt(idModel));
+                            bookingModel.setStartDate(beginDate);
+                            bookingModel.setEndDate(endDate);
+                            bookingModel.setOriginBranchOfficeId(Integer.parseInt(officeId));
+                            bookingModel.setEndBranchOfficeId(Integer.parseInt(officeId2));
+
 
                             JSONObject jsonResoponse = confirm.toJSONObject();
                             JSONObject childJSONObject = jsonResoponse.getJSONObject("response");
@@ -466,9 +490,26 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                             reservation.setPromotionCode("");
                             reservation.setItemTotal(String.valueOf(prices.size()));
 
-                            List<Extra> lista = new ArrayList<>();
+                            reservation.setClientId(2);
 
-                            String a = "asd";
+                            HttpsTrustManager.allowAllSSL();
+
+                            Response.Listener<String> responseListener = new Response.Listener<String>(){
+                                @Override
+                                public  void onResponse(String response){
+                                    JSONArray jsonResoponse = null;
+                                    try {
+                                        jsonResoponse = new JSONArray(response);
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                };
+                            };
+
+                            PayPalRequest payPalRequest = new PayPalRequest(reservation, bookingModel, responseListener);
+                            RequestQueue queue = Volley.newRequestQueue(DetailActivity.this);
+                            queue.add(payPalRequest);
+
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -483,7 +524,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 //                        }else{
 //                            m_response.setText("no llego");
 //                        }
-                        displayResultText("PaymentConfirmation info received from PayPal");
+                        displayResultText("Confirmación de pago recibido por PayPal");
                     }
                     else{
 //                        m_response.setText("error in payment");

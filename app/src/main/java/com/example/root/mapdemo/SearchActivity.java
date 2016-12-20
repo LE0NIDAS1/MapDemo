@@ -351,10 +351,16 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
                 final String officeId2 = hiddenIdTV2.getText().toString();
 
                 Intent intent = new Intent(SearchActivity.this, ListActivity.class);
+                if(officeId2 != null && officeId2 != "") {
+                    intent.putExtra("OfficeId2", officeId2);
+
+                }else{
+                    intent.putExtra("OfficeId2", officeId);
+                }
+
                 intent.putExtra("BeginDate", beginDate);
                 intent.putExtra("EndDate", endDate);
                 intent.putExtra("OfficeId1", officeId);
-                intent.putExtra("OfficeId2", officeId2);
 
                 SearchActivity.this.startActivity(intent);
 

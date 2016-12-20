@@ -11,7 +11,25 @@ import com.example.root.mapdemo.R;
 public class Person {
     private String name;
     private String age;
+    private String email;
+    private String password;
     private int photoId;
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     public String getName() {
         return name;
@@ -34,11 +52,6 @@ public class Person {
     }
 
     public void setPhotoId(int photoId) {
-        this.photoId = photoId;
-    }
-    public Person(String name, String age, int photoId) {
-        this.name = name;
-        this.age = age;
         this.photoId = photoId;
     }
 

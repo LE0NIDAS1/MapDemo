@@ -36,40 +36,157 @@
                 android:layout_centerHorizontal="true"
                 android:elevation="12dp"
                 />
-            <TextView
-                android:id="@+id/textview1"
-                android:text="Fecha de Recogida"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_toStartOf="@id/imageView1"
-                android:padding="6dp"
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="20dp"
                 android:onClick="showDatePickerDialog"
-                android:clickable="true"
-                android:textSize="24sp"
-                android:background="@drawable/border"
-                android:layout_marginLeft="30dp"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="12dp"
+                card_view:cardUseCompatPadding="true">
 
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/year1"
+                        android:onClick="showDatePickerDialog"
+                        android:layout_margin="8dp"
+                        android:textSize="20sp"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/day1"
+                            android:onClick="showDatePickerDialog"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginEnd="6dp"
+                            android:textSize="50sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/dayOfWeek1"
+                            android:onClick="showDatePickerDialog"
+                            android:textSize="15sp"
+                            />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="showDatePickerDialog"
+                        android:id="@+id/month1"
+                        android:textSize="26sp"
+                        android:layout_marginStart="6dp"
 
-                />
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textview1"
+                    android:text="Fecha de Recogida"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:layout_toStartOf="@id/imageView1"
+                    android:padding="6dp"
+                    android:onClick="showDatePickerDialog"
+                    android:clickable="true"
+                    android:textSize="24sp"
+                    android:layout_marginLeft="30dp"
+                    android:visibility="invisible"
+                    />
+            </android.support.v7.widget.CardView>
             <!--datepicker 2-->
 
-            <TextView
-                android:id="@+id/textview2"
-                android:text="Fecha Devolucion"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/card2"
+                android:layout_width="150dp"
+                android:layout_height="200dp"
+                android:layout_marginLeft="200dp"
                 android:onClick="showDatePickerDialog2"
-                android:clickable="true"
-                android:background="@drawable/border"
-                android:textSize="24sp"
-                android:padding="6dp"
-                android:layout_centerHorizontal="true"
-                android:layout_toRightOf="@+id/imageView1"
-                android:layout_marginRight="30dp"
+                card_view:cardBackgroundColor="@android:color/white"
+                card_view:cardCornerRadius="4dp"
+                card_view:cardElevation="12dp"
+                card_view:cardUseCompatPadding="true">
 
-                />
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/year2"
+                        android:onClick="showDatePickerDialog2"
+                        android:layout_margin="8dp"
+                        android:textSize="20sp"
+                        />
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/day2"
+                            android:onClick="showDatePickerDialog2"
+                            android:layout_marginStart="6dp"
+                            android:layout_marginEnd="6dp"
+                            android:textSize="50sp"
+                            />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/dayOfWeek2"
+                            android:onClick="showDatePickerDialog2"
+                            android:textSize="15sp"
+                            />
+                    </LinearLayout>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:onClick="showDatePickerDialog2"
+                        android:id="@+id/month2"
+                        android:textSize="26sp"
+                        android:layout_marginStart="6dp"
+
+                        />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/textview2"
+                    android:text="Fecha Devolucion"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:onClick="showDatePickerDialog2"
+                    android:clickable="true"
+                    android:background="@drawable/border"
+                    android:textSize="24sp"
+                    android:padding="6dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_toRightOf="@+id/imageView1"
+                    android:layout_marginRight="30dp"
+                    android:visibility="invisible"
+                    />
+            </android.support.v7.widget.CardView>
+
+
         </RelativeLayout >
 
         <TextView
@@ -154,14 +271,22 @@
             android:visibility="invisible"
             />
 
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/BSearch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/textRecogida"
-            android:layout_marginBottom="24dp"
+            android:layout_marginBottom="52dp"
             android:padding="12dp"
-            android:text="Buscar"/>
+            android:textColor="#ffffff"
+            android:text="Buscar"
+            android:layout_alignParentBottom="true"
+            android:background="#5283FF"
+            />
+        </RelativeLayout>
 
 
         <android.support.v7.widget.RecyclerView

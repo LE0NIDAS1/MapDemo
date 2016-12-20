@@ -64,10 +64,18 @@ public class ListActivity extends AppCompatActivity {
     RVAdapter.OnItemClickListener onItemClickListener = new RVAdapter.OnItemClickListener() {
         @Override
         public void onItemClick(View v, int position) {
+
+            String beginDate = getIntent().getStringExtra("BeginDate");
+            String endDate = getIntent().getStringExtra("EndDate");
+            String officeId = getIntent().getStringExtra("OfficeId1");
+            String officeId2 = getIntent().getStringExtra("OfficeId2");
+
+
             Intent transitionIntent = new Intent(ListActivity.getAppContext(), DetailActivity.class);
             transitionIntent.putExtra(DetailActivity.EXTRA_PARAM_ID, position);
             NetworkImageView placeImage = (NetworkImageView) v.findViewById(R.id.car_photo);
             TextView urlImage = (TextView) v.findViewById(R.id.urlImage);
+            TextView idModel = (TextView) v.findViewById(R.id.model_id);
 
 
             LinearLayout placeNameHolder = (LinearLayout) v.findViewById(R.id.placeNameHolder);
@@ -89,6 +97,11 @@ public class ListActivity extends AppCompatActivity {
             transitionIntent.putExtra("Name", NameHolder.getText());
             transitionIntent.putExtra("Price", priceModel.getText());
             transitionIntent.putExtra("urlImage", urlImage.getText());
+            transitionIntent.putExtra("BeginDate", beginDate);
+            transitionIntent.putExtra("EndDate", endDate);
+            transitionIntent.putExtra("OfficeId1", officeId);
+            transitionIntent.putExtra("OfficeId2", officeId2);
+            transitionIntent.putExtra("idModel", idModel.getText());
 
 //            BitmapDrawable drawable = (BitmapDrawable) placeImage.getDrawable();
 //            Bitmap bitmap = drawable.getBitmap();
@@ -142,21 +155,22 @@ public class ListActivity extends AppCompatActivity {
         rv = (RecyclerView) findViewById(R.id.rv2);
 
 
-        Model m = new Model();
-        m.setModelName("Camaro");
-        m.setImages("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg");
-        m.setBassPrice(1);
-        lista = new ArrayList<>();
-
-        lista.add(m);
-        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
-        rv = (RecyclerView) findViewById(R.id.rv2);
-        rv.setLayoutManager(mStaggeredLayoutManager);
-        rv.setHasFixedSize(true);
-        adapter = new RVAdapter(ListActivity.this);
-        adapter = new RVAdapter(lista);
-        rv.setAdapter(adapter);
-        adapter.setOnItemClickListener(onItemClickListener);
+//        Model m = new Model();
+//        m.setModelName("Camaro");
+//        m.setId(3);
+//        m.setImages("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg");
+//        m.setBassPrice(1);
+//        lista = new ArrayList<>();
+//
+//        lista.add(m);
+//        mStaggeredLayoutManager = new StaggeredGridLayoutManager(1, StaggeredGridLayoutManager.VERTICAL);
+//        rv = (RecyclerView) findViewById(R.id.rv2);
+//        rv.setLayoutManager(mStaggeredLayoutManager);
+//        rv.setHasFixedSize(true);
+//        adapter = new RVAdapter(ListActivity.this);
+//        adapter = new RVAdapter(lista);
+//        rv.setAdapter(adapter);
+//        adapter.setOnItemClickListener(onItemClickListener);
 
 
 

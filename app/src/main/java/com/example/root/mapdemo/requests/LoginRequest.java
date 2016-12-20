@@ -26,18 +26,15 @@ public class LoginRequest extends StringRequest{
     public LoginRequest(Person person, Response.Listener<String> listener){
         super(Method.POST, LOGIN_REQUEST_URL, listener, null);
         params = new HashMap<>();
-        params.put("passangers","1");
-
-
+        params.put("email", person.getEmail());
+        params.put("password", person.getPassword());
     }
     @Override
     public byte[] getBody() throws com.android.volley.AuthFailureError {
-        String beginDate = params.get("beginDate");
-        String endDate = params.get("endDate");
-        String officeOriginId = params.get("officeOriginId");
-        String officeEndId = params.get("officeEndId");
+        String email = params.get("email");
+        String password = params.get("password");
 
-        String str = "{\"airConditioner\":\"true\",\"beginDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"luggage\":\"0\",\"officeEndId\":\""+officeEndId+"\",\"officeOriginId\":\""+officeOriginId+"\",\"passangers\":\"0\"}";
+        String str = "{\"email\":\""+email+"\",\"password\":\""+password+"\"}";
         return str.getBytes();
     }
 

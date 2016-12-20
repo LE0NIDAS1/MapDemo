@@ -10,6 +10,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +21,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+import com.example.root.mapdemo.entity.Model;
+import com.example.root.mapdemo.entity.Person;
+import com.example.root.mapdemo.entity.SearchFilter;
+import com.example.root.mapdemo.requests.LoginRequest;
+import com.example.root.mapdemo.requests.SearchRequest;
+import com.example.root.mapdemo.utils.HttpsTrustManager;
+import com.example.root.mapdemo.utils.RVAdapter;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -29,6 +41,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.OptionalPendingResult;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener{
 
@@ -104,10 +122,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
 
-        final EditText _emailText = (EditText) findViewById(R.id.editMail);
-        final EditText _passwordText = (EditText) findViewById(R.id.editPass);
-        final Button _loginButton = (Button) findViewById(R.id.BLogin);
-        final TextView _signupLink = (TextView) findViewById(R.id.textRegister);
+        _emailText = (EditText) findViewById(R.id.editMail);
+        _passwordText = (EditText) findViewById(R.id.editPass);
+        _loginButton = (Button) findViewById(R.id.BLogin);
+        _signupLink = (TextView) findViewById(R.id.textRegister);
 
         _loginButton.setOnClickListener(new View.OnClickListener() {
 
@@ -129,11 +147,38 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
     public void login() {
-        Log.d("hoal", "Login");
-
         if (!validate()) {
             onLoginFailed();
             return;
+        }else{
+            HttpsTrustManager.allowAllSSL();
+            Response.Listener<String> responseListener = new Response.Listener<String>(){
+                @Override
+                public  void onResponse(String response){
+                    JSONArray jsonResoponse = null;
+                    try {
+
+                        jsonResoponse = new JSONArray(response);
+//                        SharedPreferences sp = getSharedPreferences("key", Context.MODE_PRIVATE);
+//                        SharedPreferences.Editor ed = sp.edit();
+//                        ed.putString("Name", mFullName);
+//                        ed.putString("Email", mEmail);
+//                        ed.putString("id", imagen.toString());
+//                        ed.putString("Imagen", imagen.toString());
+
+//                        ed.commit();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                };
+            };
+            Person person = new Person();
+            person.setEmail(_emailText.getText().toString());
+            person.setPassword(_passwordText.getText().toString());
+
+            LoginRequest loginRequest = new LoginRequest(person, responseListener);
+            RequestQueue queue = Volley.newRequestQueue(this);
+            queue.add(loginRequest);
         }
 
         _loginButton.setEnabled(false);
@@ -201,11 +246,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     public void onLoginSuccess() {
         _loginButton.setEnabled(true);
-        finish();
+//        finish();
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), "No se pudo iniciar sesion", Toast.LENGTH_LONG).show();
 
         _loginButton.setEnabled(true);
     }
