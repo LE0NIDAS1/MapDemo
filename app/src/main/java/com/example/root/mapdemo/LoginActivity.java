@@ -117,7 +117,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         login.setSize(SignInButton.SIZE_WIDE);
         login.setScopes(gso.getScopeArray());
 
+        SharedPreferences sp=getSharedPreferences("key", Context.MODE_PRIVATE);
+        String sImagen = sp.getString("Imagen", "");
 
+        if(!sImagen.equals("")){
+            updateUI(true);
+        }
 
 
 
@@ -155,18 +160,29 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             Response.Listener<String> responseListener = new Response.Listener<String>(){
                 @Override
                 public  void onResponse(String response){
-                    JSONArray jsonResoponse = null;
+                    JSONObject jsonResoponse = null;
                     try {
 
-                        jsonResoponse = new JSONArray(response);
-//                        SharedPreferences sp = getSharedPreferences("key", Context.MODE_PRIVATE);
-//                        SharedPreferences.Editor ed = sp.edit();
-//                        ed.putString("Name", mFullName);
-//                        ed.putString("Email", mEmail);
-//                        ed.putString("id", imagen.toString());
+                        jsonResoponse = new JSONObject(response);
+                        Person person = new Person();
+                        person.setId(jsonResoponse.getString("id"));
+                        person.setName(jsonResoponse.getString("name"));
+                        //rol
+                        person.setEmail(jsonResoponse.getString("email"));
+                        SharedPreferences sp = getSharedPreferences("key", Context.MODE_PRIVATE);
+                        SharedPreferences.Editor ed = sp.edit();
+                        ed.putString("Name", person.getName());
+                        ed.putString("Email", person.getEmail());
+                        ed.putString("id", person.getId());
 //                        ed.putString("Imagen", imagen.toString());
+                        ed.commit();
 
-//                        ed.commit();
+                        Toast.makeText(getBaseContext(), "Bienvenido "+person.getName(), Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
+                        LoginActivity.this.startActivity(intent);
+
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -219,6 +235,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 String mFullName = acct.getDisplayName();
                 String mEmail = acct.getEmail();
                 Uri imagen = acct.getPhotoUrl();
+                String a = imagen.toString();
 
                 SharedPreferences sp = getSharedPreferences("key", Context.MODE_PRIVATE);
                 SharedPreferences.Editor ed = sp.edit();
@@ -227,6 +244,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 ed.putString("Imagen", imagen.toString());
                 ed.commit();
 
+                Toast.makeText(getBaseContext(), "Inicio de Sesión con "+mFullName, Toast.LENGTH_LONG).show();
+
+                Intent intent = new Intent(LoginActivity.this, SearchActivity.class);
+                LoginActivity.this.startActivity(intent);
 
                 updateUI(true);
 
@@ -368,6 +389,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onResult(Status status) {
                         Log.d(TAG, "signOut:onResult:" + status);
+                        SharedPreferences preferences = getSharedPreferences("key", Context.MODE_PRIVATE);
+                        preferences.edit().remove("Name").apply();
+                        preferences.edit().remove("Email").apply();
+                        preferences.edit().remove("Imagen").apply();
                         updateUI(false);
                     }
                 });
@@ -379,6 +404,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void onResult(Status status) {
                         Log.d(TAG, "revokeAccess:onResult:" + status);
+                        SharedPreferences preferences = getSharedPreferences("key", Context.MODE_PRIVATE);
+                        preferences.edit().remove("Name").apply();
+                        preferences.edit().remove("Email").apply();
+                        preferences.edit().remove("Imagen").apply();
                         updateUI(false);
                     }
                 });

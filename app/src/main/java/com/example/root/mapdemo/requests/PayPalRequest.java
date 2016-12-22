@@ -37,7 +37,6 @@ public class PayPalRequest extends StringRequest {
         params.put("itemTotal", reservation.getItemTotal());
         params.put("orderTotal", reservation.getOrderTotal());
         params.put("promotionCode", reservation.getPromotionCode());
-
         params.put("clientId", String.valueOf(reservation.getClientId()));
 
     }
@@ -56,9 +55,10 @@ public class PayPalRequest extends StringRequest {
         String itemTotal = params.get("itemTotal");
         String orderTotal = params.get("orderTotal");
         String promotionCode = params.get("promotionCode");
+        String clientId = params.get("clientId");
 
 
-        String str = "{\"bookingModel\":{\"idModel\":"+idModel+",\"startDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"originBranchOfficeId\":"+officeOriginId+",\"endBranchOfficeId\":"+officeEndId+",\"withInsurance\":true,\"withFullTank\":50},\"token\":\""+token+"\",\"payerId\":\"TG7J6WTAZWD2L\",\"itemTotal\":\""+itemTotal+"\",\"orderTotal\":\""+orderTotal+"\",\"extras\":[],\"promotionCode\":\"\",\"clientId\":73}";
+        String str = "{\"bookingModel\":{\"idModel\":"+idModel+",\"startDate\":\""+beginDate+"\",\"endDate\":\""+endDate+"\",\"originBranchOfficeId\":"+officeOriginId+",\"endBranchOfficeId\":"+officeEndId+",\"withInsurance\":true,\"withFullTank\":50},\"token\":\""+token+"\",\"payerId\":\"TG7J6WTAZWD2L\",\"itemTotal\":\""+itemTotal+"\",\"orderTotal\":\""+orderTotal+"\",\"extras\":[],\"promotionCode\":\"\",\"clientId\":"+clientId+"}";
         return str.getBytes();
     };
 

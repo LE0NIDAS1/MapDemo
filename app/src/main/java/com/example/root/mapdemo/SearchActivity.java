@@ -50,8 +50,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.TimeZone;
 
 import static com.example.root.mapdemo.R.layout.activity_search;
 
@@ -180,13 +185,19 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
     private void selectItem(String title) {
         // Enviar título como arguemento del fragmento
         Bundle args = new Bundle();
-        args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
-
+//        args.putString(PlaceholderFragment.ARG_SECTION_TITLE, title);
+        if(title.equals("Cerrar Sesión")){
+            SharedPreferences preferences = getSharedPreferences("key", Context.MODE_PRIVATE);
+            preferences.edit().remove("Name").apply();
+            preferences.edit().remove("Email").apply();
+            preferences.edit().remove("Imagen").apply();
+            Intent refresh = new Intent(this, SearchActivity.class);
+            startActivity(refresh);
+        }
 //        Toast.makeText(this, "ParametrosActivity devolvió: " + "hola", Toast.LENGTH_LONG).show();
-
         drawerLayout.closeDrawers(); // Cerrar drawer
 
-        setTitle(title); // Setear título actual
+//        setTitle(title); // Setear título actual
 
     }
 
@@ -216,7 +227,7 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
         progressDialog = new ProgressDialog(SearchActivity.this,
                 R.style.AppTheme_Dark_Dialog);
         progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Loading...");
+        progressDialog.setMessage("Cargando...");
         progressDialog.show();
 
 
@@ -241,8 +252,6 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
         Intent intent = new Intent(SearchActivity.this, LoginActivity.class);
         SearchActivity.this.startActivityForResult(intent, REQUEST_CODE);
     }
-
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -282,9 +291,48 @@ public class SearchActivity extends AppCompatActivity implements CompoundButton.
         super.onCreate(savedInstanceState);
         setContentView(activity_search);
 
-
         SwitchCompat switchCompat = (SwitchCompat) findViewById(R.id.compatSwitch);
         switchCompat.setOnCheckedChangeListener(this);
+
+        String[] days = new String[] { "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio",
+                "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"};
+
+        TextView tv1= (TextView) findViewById(R.id.textview1);
+        TextView tv2= (TextView) findViewById(R.id.year1);
+        TextView tv3= (TextView) findViewById(R.id.day1);
+        TextView tv4= (TextView) findViewById(R.id.dayOfWeek1);
+        TextView tv5= (TextView) findViewById(R.id.month1);
+
+        TextView tv6= (TextView) findViewById(R.id.textview2);
+        TextView tv7= (TextView) findViewById(R.id.year2);
+        TextView tv8= (TextView) findViewById(R.id.day2);
+        TextView tv9= (TextView) findViewById(R.id.dayOfWeek2);
+        TextView tv10= (TextView) findViewById(R.id.month2);
+
+        //inicializacion de fechas
+        Date date = new Date();
+
+        Calendar calendarNow = new GregorianCalendar(TimeZone.getTimeZone("Europe/Madrid"));
+        int monthDay =calendarNow.get(Calendar.DAY_OF_MONTH);
+        int month = calendarNow.get(Calendar.MONTH);
+        int year = calendarNow.get(Calendar.YEAR);
+        tv2.setText(String.valueOf(year));
+        tv3.setText(String.valueOf(monthDay));
+        tv5.setText(days[date.getMonth()]);
+
+        tv7.setText(String.valueOf(year));
+        tv8.setText(String.valueOf(monthDay+1));
+        tv10.setText(days[date.getMonth()]);
+
+        SimpleDateFormat simpledateformat = new SimpleDateFormat("EEEE");
+        tv1.setText(String.valueOf(monthDay)+"/"+String.valueOf(month+1)+"/"+String.valueOf(year));
+        tv6.setText(String.valueOf(monthDay+1)+"/"+String.valueOf(month+1)+"/"+String.valueOf(year));
+
+        String dayOfWeek = simpledateformat.format(date);
+        tv4.setText(String.valueOf(dayOfWeek));
+        date = new Date(year, month, monthDay);
+        dayOfWeek = simpledateformat.format(date);
+        tv9.setText(String.valueOf(dayOfWeek));
 
 
         //final EditText searchText = (EditText) findViewById(R.id.searchText);

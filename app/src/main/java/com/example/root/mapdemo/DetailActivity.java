@@ -5,6 +5,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -19,6 +20,7 @@ import android.transition.Fade;
 import android.transition.Transition;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.SearchEvent;
 import android.view.View;
 import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
@@ -46,9 +48,11 @@ import com.example.root.mapdemo.entity.BookingModel;
 import com.example.root.mapdemo.entity.Extra;
 import com.example.root.mapdemo.entity.Model;
 import com.example.root.mapdemo.entity.Office;
+import com.example.root.mapdemo.entity.PromotionCode;
 import com.example.root.mapdemo.entity.Reservation;
 import com.example.root.mapdemo.requests.ExtraRequest;
 import com.example.root.mapdemo.requests.PayPalRequest;
+import com.example.root.mapdemo.requests.PromocionRequest;
 import com.example.root.mapdemo.requests.SearchRequest;
 import com.example.root.mapdemo.utils.HttpsTrustManager;
 import com.example.root.mapdemo.utils.TransitionAdapter;
@@ -71,6 +75,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.example.root.mapdemo.R.id.BValidate;
 import static java.lang.Thread.sleep;
 
 /**
@@ -173,6 +178,64 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 //        getPhoto();
        colorize(bitmap);
 
+        //Validacion de Promocion
+        final Button BValidate = (Button) findViewById(R.id.BValidate);
+        BValidate.setOnClickListener(new View.OnClickListener() {
+                                       @Override
+                                       public void onClick(View v) {
+                                           HttpsTrustManager.allowAllSSL();
+
+                                           Response.Listener<String> responseListener = new Response.Listener<String>(){
+                                               @Override
+                                               public  void onResponse(String response){
+                                                   JSONObject jsonResoponse = null;
+                                                   try {
+                                                       jsonResoponse = new JSONObject(response);
+                                                       PromotionCode promotionCode = new PromotionCode();
+                                                       promotionCode.setValid(jsonResoponse.getBoolean("valid"));
+                                                       promotionCode.setValidationMessage(jsonResoponse.getString("validationMessage"));
+                                                       if(promotionCode.getValid()) {
+                                                           promotionCode.setId(jsonResoponse.getString("promotionId"));
+                                                           promotionCode.setPercentage((float) jsonResoponse.getDouble("percentage"));
+                                                           promotionCode.setValidationMessage(jsonResoponse.getString("validationMessage"));
+                                                           promotionCode.setPromotionCode(jsonResoponse.getString("promotionCode"));
+                                                           Float precio = Float.parseFloat(mPrice.getText().toString().replace("$",""));
+                                                           precio = precio - (precio * promotionCode.getPercentage() / 100);
+                                                           mPrice.setText(String.valueOf(precio));
+                                                           Toast.makeText(
+                                                                   getApplicationContext(),
+                                                                   "promocion valida", Toast.LENGTH_LONG)
+                                                                   .show();
+                                                       }else{
+                                                           Toast.makeText(
+                                                                   getApplicationContext(),
+                                                                   promotionCode.getValidationMessage(), Toast.LENGTH_LONG)
+                                                                   .show();
+                                                       }
+                                                   } catch (JSONException e) {
+                                                       e.printStackTrace();
+                                                   }
+                                               };
+                                           };
+                                           PromotionCode promotionCode = new PromotionCode();
+                                           String idModel = getIntent().getStringExtra("idModel");
+                                           String beginDate = getIntent().getStringExtra("BeginDate");
+                                           String origin = getIntent().getStringExtra("OfficeId1");
+                                           String detiny = getIntent().getStringExtra("OfficeId2");
+
+                                           promotionCode.setPromotionCode(mEditTextTodo.getText().toString());
+                                           promotionCode.setModelId(idModel);
+                                           promotionCode.setOrigin(origin);
+                                           promotionCode.setDestiny(detiny);
+                                           promotionCode.setOriginDate(beginDate);
+
+
+                                           PromocionRequest promocionRequest = new PromocionRequest(promotionCode, responseListener);
+                                           RequestQueue queue = Volley.newRequestQueue(DetailActivity.this);
+                                           queue.add(promocionRequest);
+
+                                       }
+        });
 
 //        generateListContent();
 
@@ -203,7 +266,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                     mList.setOnItemClickListener(new AdapterView.OnItemClickListener(){
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Toast.makeText(DetailActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(DetailActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -221,7 +284,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                              @Override
                                              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                                 Toast.makeText(DetailActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
+//                                                 Toast.makeText(DetailActivity.this, "List item was clicked at " + position, Toast.LENGTH_SHORT).show();
                                              }
                                          });
 
@@ -418,7 +481,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             mainViewholder.button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
+//                    Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
                 }
             });
             mainViewholder.title.setText(mObjects.get(position));
@@ -490,7 +553,10 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                             reservation.setPromotionCode("");
                             reservation.setItemTotal(String.valueOf(prices.size()));
 
-                            reservation.setClientId(2);
+                            SharedPreferences sp=getSharedPreferences("key", Context.MODE_PRIVATE);
+                            String sId = sp.getString("id", "");
+
+                            reservation.setClientId(Integer.parseInt(sId));
 
                             HttpsTrustManager.allowAllSSL();
 
@@ -525,6 +591,8 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 //                            m_response.setText("no llego");
 //                        }
                         displayResultText("Confirmación de pago recibido por PayPal");
+                        Intent intent = new Intent(DetailActivity.this, SearchActivity.class);
+                        DetailActivity.this.startActivity(intent);
                     }
                     else{
 //                        m_response.setText("error in payment");
@@ -538,7 +606,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         }
     }
     protected void displayResultText(String result) {
-        ((TextView)findViewById(R.id.textPrice)).setText("Result : " + result);
+//        ((TextView)findViewById(R.id.textPrice)).setText("Result : " + result);
         Toast.makeText(
                 getApplicationContext(),
                 result, Toast.LENGTH_LONG)

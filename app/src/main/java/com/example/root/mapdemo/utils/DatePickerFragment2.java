@@ -12,6 +12,7 @@ import com.example.root.mapdemo.R;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
 
 /**
  * Created by leoeg on 17/11/2016.
@@ -52,7 +53,12 @@ public class DatePickerFragment2 extends DialogFragment
         String dayOfWeek = simpledateformat.format(date);
         tv4.setText(String.valueOf(dayOfWeek));
 
-        tv1.setText(view.getDayOfMonth()+"/"+(view.getMonth()+1)+"/"+view.getYear());
+        Formatter fmt = new Formatter();
+        fmt.format("%02d",view.getDayOfMonth());
+        Formatter fm2 = new Formatter();
+        fm2.format("%02d",view.getMonth()+1);
+
+        tv1.setText(fmt+"/"+fm2+"/"+view.getYear());
 
     }
 }
