@@ -49,6 +49,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
         NetworkImageView carPhoto;
         TextView urlImage;
         TextView idModel;
+        TextView insurance;
+        TextView fullTank;
 
         public ModelViewHolder(View itemView){
             super(itemView);
@@ -59,6 +61,8 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
             carPhoto = (NetworkImageView)itemView.findViewById(R.id.car_photo);
             urlImage = (TextView) itemView.findViewById(R.id.urlImage);
             idModel = (TextView) itemView.findViewById(R.id.model_id);
+            insurance = (TextView) itemView.findViewById(R.id.insurance);
+            fullTank = (TextView) itemView.findViewById(R.id.fullTank);
         }
 
         @Override
@@ -107,6 +111,9 @@ public class RVAdapter extends RecyclerView.Adapter<RVAdapter.ModelViewHolder> {
         ModelViewHolder.urlImage.setText(URL + "/images/" +lista.get(i).getImages());
         ModelViewHolder.carPhoto.setImageUrl(URL + "/images/" +lista.get(i).getImages(), VolleySingleton.getInstance().getImageLoader());
 //        ModelViewHolder.carPhoto.setImageUrl("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg", VolleySingleton.getInstance().getImageLoader());
+
+        ModelViewHolder.insurance.setText(String.valueOf(lista.get(i).getInsurance()));
+        ModelViewHolder.fullTank.setText(String.valueOf(lista.get(i).getFullTank()));
 
         ImageView ima = new ImageView(ListActivity.getAppContext());
         ima.setImageDrawable(ModelViewHolder.carPhoto.getDrawable());

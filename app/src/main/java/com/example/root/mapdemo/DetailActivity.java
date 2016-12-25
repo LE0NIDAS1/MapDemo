@@ -31,6 +31,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -57,6 +58,8 @@ import com.example.root.mapdemo.requests.SearchRequest;
 import com.example.root.mapdemo.utils.HttpsTrustManager;
 import com.example.root.mapdemo.utils.TransitionAdapter;
 import com.example.root.mapdemo.utils.VolleySingleton;
+import com.google.android.gms.analytics.ExceptionParser;
+import com.google.android.gms.drive.internal.StringListResponse;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -73,9 +76,15 @@ import org.json.JSONObject;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import static com.example.root.mapdemo.R.id.BValidate;
+import static com.example.root.mapdemo.R.id.end;
+import static com.example.root.mapdemo.R.id.standard;
+import static com.example.root.mapdemo.R.id.textTotal;
 import static java.lang.Thread.sleep;
 
 /**
@@ -98,6 +107,7 @@ public class DetailActivity extends Activity implements View.OnClickListener {
     private InputMethodManager mInputManager;
     private Model model;
     private TextView mPrice;
+    private TextView total;
     private ArrayList<String> mTodoList;
     private ArrayAdapter mToDoAdapter;
     int defaultColorForRipple;
@@ -132,6 +142,8 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         String officeId = getIntent().getStringExtra("OfficeId1");
         String officeId2 = getIntent().getStringExtra("OfficeId2");
         String idModel = getIntent().getStringExtra("idModel");
+        String insurance = getIntent().getStringExtra("insurance");
+        String fullTank = getIntent().getStringExtra("fullTank");
 
 
 
@@ -141,6 +153,8 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         mImageView = (NetworkImageView) findViewById(R.id.placeImage);
 
         mPrice = (TextView) findViewById(R.id.textPrice);
+        total = (TextView) findViewById(R.id.total);
+
         mTitle = (TextView) findViewById(R.id.textView);
         mTitleHolder = (LinearLayout) findViewById(R.id.placeNameHolder);
         mAddButton = (ImageButton) findViewById(R.id.btn_add);
@@ -168,6 +182,27 @@ public class DetailActivity extends Activity implements View.OnClickListener {
         //loadPlace();
         mTitle.setText(model.getModelName());
         mPrice.setText(price);
+
+        String a = beginDate.substring(0,2);
+        String b = beginDate.substring(3,5);
+        String c = beginDate.substring(6,10);
+
+        Calendar calendar1 = new GregorianCalendar(Integer.parseInt(c),Integer.parseInt(b),Integer.parseInt(a));
+        java.sql.Date fechaInicio = new java.sql.Date(calendar1.getTimeInMillis());
+        a = endDate.substring(0,2);
+        b = endDate.substring(3,5);
+        c = endDate.substring(6,10);
+        Calendar calendar = new GregorianCalendar(Integer.parseInt(c),Integer.parseInt(b),Integer.parseInt(a));
+        java.sql.Date fechaFin = new java.sql.Date(calendar.getTimeInMillis());
+
+        long diferencia = ( fechaFin.getTime() - fechaInicio.getTime() )/(24 * 60 * 60 * 1000);
+
+        String sTotal = price.replace("$","");
+        Float fTotal = Float.parseFloat(sTotal) * diferencia;
+        total.setText(String.valueOf(fTotal));
+
+
+
 //        mImageView.setImageBitmap(bitmap);
         mImageView.setImageUrl(urlImage, VolleySingleton.getInstance().getImageLoader());
         windowTransition();
@@ -199,9 +234,9 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                                                            promotionCode.setPercentage((float) jsonResoponse.getDouble("percentage"));
                                                            promotionCode.setValidationMessage(jsonResoponse.getString("validationMessage"));
                                                            promotionCode.setPromotionCode(jsonResoponse.getString("promotionCode"));
-                                                           Float precio = Float.parseFloat(mPrice.getText().toString().replace("$",""));
+                                                           Float precio = Float.parseFloat(total.getText().toString().replace("$",""));
                                                            precio = precio - (precio * promotionCode.getPercentage() / 100);
-                                                           mPrice.setText(String.valueOf(precio));
+                                                           total.setText(String.valueOf(precio));
                                                            Toast.makeText(
                                                                    getApplicationContext(),
                                                                    "promocion valida", Toast.LENGTH_LONG)
@@ -276,11 +311,12 @@ public class DetailActivity extends Activity implements View.OnClickListener {
             };
         };
             //ingresar datos precargado
-//            data.add("GPS");
-//            data.add("Air conditioner");
-//            prices.add("$1");
-//            prices.add("$2");
+            data.add("Seguro");
+            data.add("Devolver con Tanque lleno");
+            prices.add(insurance);
+            prices.add(fullTank);
             mList.setAdapter(new MyListAdaper(getApplicationContext(), R.layout.list_extra, data, prices));
+
             mList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                                              @Override
                                              public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -376,13 +412,14 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                     m_service.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,m_configuration);
                     startService(m_service);
                     String value = mEditTextTodo.getText().toString();
-                    String aux = mPrice.getText().toString().replace("$", "");
+//                    String aux = mPrice.getText().toString().replace("$", "");
+                    String aux = total.getText().toString();
                     monto_pago = new BigDecimal(aux);
-                    int size = prices.size();
-                    for(int x = 0; x < prices.size(); x++) {
-                        aux = prices.get(x).replace("$","");
-                        monto_pago = monto_pago.add(new BigDecimal(aux));
-                    }
+//                    int size = prices.size();
+//                    for(int x = 0; x < prices.size(); x++) {
+//                        aux = prices.get(x).replace("$","");
+//                        monto_pago = monto_pago.add(new BigDecimal(aux));
+//                    }
 
 
                     PayPalPayment payment = new PayPalPayment(monto_pago,"USD","Test payment with paypal"
@@ -482,6 +519,15 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                 @Override
                 public void onClick(View v) {
 //                    Toast.makeText(getContext(), "Button was clicked for list item " + position, Toast.LENGTH_SHORT).show();
+                    CompoundButton bSwitch = (CompoundButton)v;
+                    if(bSwitch.isChecked()){
+                        Float fTotal = Float.parseFloat(total.getText().toString()) + Float.parseFloat(mPrices.get(position).replace("$",""));
+                        total.setText(String.valueOf(fTotal));
+
+                    }else{
+                        Float fTotal = Float.parseFloat(total.getText().toString()) - Float.parseFloat(mPrices.get(position).replace("$",""));
+                        total.setText(String.valueOf(fTotal));
+                    }
                 }
             });
             mainViewholder.title.setText(mObjects.get(position));
@@ -540,9 +586,15 @@ public class DetailActivity extends Activity implements View.OnClickListener {
                             bookingModel.setIdModel(Integer.parseInt(idModel));
                             bookingModel.setStartDate(beginDate);
                             bookingModel.setEndDate(endDate);
-                            bookingModel.setOriginBranchOfficeId(Integer.parseInt(officeId));
-                            bookingModel.setEndBranchOfficeId(Integer.parseInt(officeId2));
-
+                            try {
+                                bookingModel.setOriginBranchOfficeId(Integer.parseInt(officeId));
+                                bookingModel.setEndBranchOfficeId(Integer.parseInt(officeId2));
+                            }catch (Exception e){
+                                Toast.makeText(
+                                        getApplicationContext(),
+                                        "nada", Toast.LENGTH_LONG)
+                                        .show();
+                            }
 
                             JSONObject jsonResoponse = confirm.toJSONObject();
                             JSONObject childJSONObject = jsonResoponse.getJSONObject("response");
@@ -578,6 +630,10 @@ public class DetailActivity extends Activity implements View.OnClickListener {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            Toast.makeText(
+                                    getApplicationContext(), "No se pudo realizar el pago", Toast.LENGTH_LONG)
+                                    .show();
+
                         }
 //                        m_response.setText("payment is approved");
 

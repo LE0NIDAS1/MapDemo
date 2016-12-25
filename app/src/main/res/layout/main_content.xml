@@ -19,6 +19,16 @@
         android:layout_height="match_parent"
         xmlns:android="http://schemas.android.com/apk/res/android">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Buscar un coche"
+            android:textColor="#5283FF"
+            android:textSize="25sp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="10dp"
+            />
+
         <!--datepicker 1-->
         <RelativeLayout
             android:orientation="vertical"
@@ -31,7 +41,7 @@
                 android:id="@+id/imageView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="80dp"
                 android:src="@drawable/arrow_right"
                 android:layout_centerHorizontal="true"
                 android:elevation="12dp"
@@ -41,7 +51,7 @@
                 android:id="@+id/card"
                 android:layout_width="150dp"
                 android:layout_height="200dp"
-                android:layout_marginLeft="20dp"
+                android:layout_toStartOf="@id/imageView1"
                 android:onClick="showDatePickerDialog"
                 card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="4dp"
@@ -115,7 +125,7 @@
                 android:id="@+id/card2"
                 android:layout_width="150dp"
                 android:layout_height="200dp"
-                android:layout_marginLeft="200dp"
+                android:layout_toEndOf="@id/imageView1"
                 android:onClick="showDatePickerDialog2"
                 card_view:cardBackgroundColor="@android:color/white"
                 card_view:cardCornerRadius="4dp"

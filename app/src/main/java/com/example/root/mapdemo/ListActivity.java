@@ -82,6 +82,8 @@ public class ListActivity extends AppCompatActivity {
 
             TextView NameHolder = (TextView) v.findViewById(R.id.model_name);
             TextView priceModel = (TextView) v.findViewById(R.id.car_base_price);
+            TextView insurance = (TextView) v.findViewById(R.id.insurance);
+            TextView fullTank = (TextView) v.findViewById(R.id.fullTank);
 
             View navigationBar = findViewById(android.R.id.navigationBarBackground);
             View statusBar = findViewById(android.R.id.statusBarBackground);
@@ -102,6 +104,8 @@ public class ListActivity extends AppCompatActivity {
             transitionIntent.putExtra("OfficeId1", officeId);
             transitionIntent.putExtra("OfficeId2", officeId2);
             transitionIntent.putExtra("idModel", idModel.getText());
+            transitionIntent.putExtra("insurance", insurance.getText());
+            transitionIntent.putExtra("fullTank", fullTank.getText());
 
 //            BitmapDrawable drawable = (BitmapDrawable) placeImage.getDrawable();
 //            Bitmap bitmap = drawable.getBitmap();
@@ -160,6 +164,8 @@ public class ListActivity extends AppCompatActivity {
 //        m.setId(3);
 //        m.setImages("http://www.deautomoviles.com.ar/articulos/modelos/img/chevrolet-camaro-2010.jpg");
 //        m.setBassPrice(1);
+//        m.setFullTank(200);
+//        m.setInsurance(60);
 //        lista = new ArrayList<>();
 //
 //        lista.add(m);
@@ -204,7 +210,7 @@ public class ListActivity extends AppCompatActivity {
                         m.setAirConditioner(childJSONObject.getBoolean("airConditioner"));
                         m.setTransmission(childJSONObject.getString("transmission"));
                         m.setInsurance((float) childJSONObject.getDouble("insurance"));
-                        m.setFullTank(childJSONObject.getInt("fullTank"));
+                        m.setFullTank(childJSONObject.getInt("fullTank") * -1);
                         JSONArray imageJson = childJSONObject.getJSONArray("images");
                         if (! imageJson.isNull(0)) {
                             JSONObject imageSONObject = imageJson.getJSONObject(0);

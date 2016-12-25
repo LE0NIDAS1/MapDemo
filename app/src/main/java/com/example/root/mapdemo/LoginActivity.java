@@ -242,6 +242,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 ed.putString("Name", mFullName);
                 ed.putString("Email", mEmail);
                 ed.putString("Imagen", imagen.toString());
+                ed.putString("id", "73");
                 ed.commit();
 
                 Toast.makeText(getBaseContext(), "Inicio de Sesión con "+mFullName, Toast.LENGTH_LONG).show();

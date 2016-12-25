@@ -53,7 +53,19 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/model_id"
-                android:visibility="invisible"
+                android:visibility="gone"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/insurance"
+                android:visibility="gone"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/fullTank"
+                android:visibility="gone"
                 />
             <TextView
                 android:layout_width="wrap_content"

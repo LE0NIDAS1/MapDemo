@@ -17,8 +17,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/list_item_text"
         android:layout_toEndOf="@+id/list_item_thumbnail"
-        android:textSize="20sp"
-        android:layout_marginTop="7dp"
+        android:textSize="17sp"
+        android:layout_marginTop="9dp"
         />
 
     <TextView
@@ -26,8 +26,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/list_price_text1"
         android:layout_toStartOf="@+id/compatSwitchExtra"
-        android:textSize="20sp"
-        android:layout_marginTop="7dp"
+        android:textSize="17sp"
+        android:layout_marginTop="9dp"
 
         />
 
@@ -36,10 +36,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:checked="true"
+        android:checked="false"
         android:layout_marginEnd="30dp"
         android:layout_marginTop="7dp"
         android:theme="@style/SCBSwitch"
+        android:onClick="btnRemoveClick"
+
         />
 
 </RelativeLayout>
